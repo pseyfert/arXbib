@@ -74,13 +74,19 @@ def main(argv) :
         # assemble INSPIRE url to search for this article
         url = "http://inspirehep.net/search?p=find+eprint+{}".format(ID)
 
-        import urllib.request as urlrequest
+        #import urllib.request as urlrequest
+        #http://python-future.org/compatible_idioms.html#urllib-module
+        #http://github.com/pseyfert/LFVdiagrams
+        if sys.version < '3':
+            import urllib as urlrequest
+        else:
+            import urllib.request as urlrequest
         from bs4 import BeautifulSoup
 
         # get webpage and put it into the beautifulsoup parser
         web_page = urlrequest.urlopen(url).read()
         #print(web_page)
-        soup = BeautifulSoup(web_page)
+        soup = BeautifulSoup(web_page,"html.parser")
 
         # browse to the first search entry and extract links to bib files
         entries= soup.find("div",attrs={'class' : 'record_body'})
@@ -134,8 +140,14 @@ def main(argv) :
             else:
                 accessmode = "w"
 
-            with open(bibfile, accessmode) as f:
-                for line in lines : f.write(line+"\n")
+            if sys.version < '3':
+                # http://stackoverflow.com/questions/4970378/write-in-a-file-with-python-3-unicode
+                # http://stackoverflow.com/questions/5483423/how-to-write-unicode-strings-into-a-file
+                with open(bibfile, accessmode) as f:
+                    for line in lines : f.write((line+"\n").encode("UTF-8"))
+            else:
+                with open(bibfile, accessmode, encoding='utf-8') as f:
+                    for line in lines : f.write((line+"\n"))
 
             print(bcolors.OKGREEN+"Added bibtex entry with key {}.".format(key) + bcolors.ENDC)
 

@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 
 class bcolors:
     OKGREEN = '\033[92m'
@@ -89,17 +89,23 @@ def main(argv) :
     # if bibfile is given, patch the bibfile        
     if bibfile!="" :
         # check if entry is already present
-        biblio=open(bibfile,'r').read()
-        if key in biblio : 
-            print(bcolors.FAIL+"bibtex key {} already in use! \nDid not patch bib file.".format(key) + bcolors.ENDC)
-            exit(4) # exit after duplicate key has been found
-        if ID in biblio : 
-            print(bcolors.WARNING+"An article with the same arXive ID is already in the bibliography"+bcolors.ENDC)   
-            if not force : 
-                print(bcolors.WARNING+"Force entry with -f option."+bcolors.ENDC)
-                exit(5)
-            
-        with open(bibfile, "a") as f:
+        # http://stackoverflow.com/questions/82831/check-whether-a-file-exists-using-python
+        import os.path
+        if os.path.isfile(bibfile):
+            biblio=open(bibfile,'r').read()
+            if key in biblio : 
+                print(bcolors.FAIL+"bibtex key {} already in use! \nDid not patch bib file.".format(key) + bcolors.ENDC)
+                exit(4) # exit after duplicate key has been found
+            if ID in biblio : 
+                print(bcolors.WARNING+"An article with the same arXive ID is already in the bibliography"+bcolors.ENDC)   
+                if not force : 
+                    print(bcolors.WARNING+"Force entry with -f option."+bcolors.ENDC)
+                    exit(5)
+            accessmode = "a"
+        else:
+            accessmode = "w"
+                
+        with open(bibfile, accessmode) as f:
             for line in lines : f.write(line+"\n")
                       
         print(bcolors.OKGREEN+"Added bibtex entry with key {}.".format(key) + bcolors.ENDC)  

@@ -20,22 +20,33 @@ def main(argv) :
 
     helpstring = "arXbib.py [-o <bibfile to patch>] [-k <new bibtex key>] [-f] <arXiv ID>"
 
-    try :
-        opts, args = getopt.getopt(argv,"o:k:f")
-    except getopt.GetoptError :
-        print(helpstring)
-        exit(1)
+    IDs=[]
+    while len(argv)>0:
+        try :
+            opts, argv = getopt.getopt(argv,"o:k:fs",["open=","key=","force","safe"])
+        except getopt.GetoptError :
+            print(helpstring)
+            exit(1)
 
-    if len(args)==0 :
-        print(helpstring)
+        if len(argv)+len(IDs)==0 :
+            print(helpstring)
+            exit(2)
+        if len(argv)>0:
+            IDs.append(argv[0])
+        argv=argv[1:]
+
+        # later opts override earlier (for now)
+        # force can be undone with -s = save
+        for opt,arg in opts :
+            if   opt=='-o' or opt=="--open" : bibfile = arg
+            elif opt=='-k' or opt=="--key"  : key = arg
+            elif opt=='-f' or opt=="--force": force = True
+            elif opt=='-s' or opt=="--safe" : force = False
+
+    ID=IDs[0]
+    if len(IDs)>1:
+        print("sorry, only one key at a time for now");
         exit(2)
-
-    for opt,arg in opts :
-        if opt=='-o' : bibfile = arg
-        elif opt=='-k' : key = arg
-        elif opt=='-f' : force = True
-
-    ID=args[0]
 
 
     if ID=="" :

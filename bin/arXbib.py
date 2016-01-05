@@ -1,4 +1,4 @@
-#!/usr/bin/env python3
+#!/usr/bin/env python
 
 class bcolors:
     OKGREEN = '\033[92m'

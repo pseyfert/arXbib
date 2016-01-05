@@ -44,8 +44,22 @@ def main(argv) :
         if ID!="":
             id_key_pairs[ID] = key
         elif key!="":
-            print("last key didn't match any ID");
-            exit(2)
+            ## this should read
+            #```
+            #print("last key didn't match any ID");
+            #exit(2)
+            #```
+            #but I'm now doing very nasty "exception" handeling
+            if len(id_key_pairs)==1:
+                only_entry = id_key_pairs.popitem()
+                if only_entry[1] == "":
+                    # for the only ID, the key-id order was reversed. permitting this.
+                    print("You provided first the ID, then the key. This is okay for *one* ID");
+                    id_key_pairs[only_entry[0]]=key
+                else:
+                    print("cannot assign the last key!");
+                    exit(2)
+
 
     if len(id_key_pairs)==0 :
         print(helpstring)

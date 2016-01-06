@@ -133,7 +133,7 @@ def main(argv):
         # check that the eprint ID is the same as the one you requested
         lines = bibtex.text.splitlines()
         for line in lines:
-            if "eprint" in line and ID in not line:
+            if "eprint" in line and ID not in line:
                 print(bcolors.FAIL+"Entry eprint ID differs from requested one!"+bcolors.ENDC)
                 exit(3)
 

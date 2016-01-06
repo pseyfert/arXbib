@@ -27,7 +27,21 @@ def main(argv):
     force = False
 
     # TODO: rewrite
-    helpstring = "arXbib.py [-o <bibfile to patch>] [-k <new bibtex key>] [-f] <arXiv ID>"
+    helpstring = """
+    usage: arXbib.py [-o|--open <bibfile>] [-k|--key <key>] [-f|--force|-s|--safe] <arXiv ID> [<arXiv ID> ...]
+       <bibfile>      : the bibfile to be patched, will be created if it doesn't exist
+                        in case of multiple -o arguments, the last is taken
+       <key>          : the citation key to be used for the arXivID
+                        in case of multiple IDs, the most latest key before each ID will be used
+                        if there is no other arXiv ID between that key and the current ID
+                        if there are more than one -k arguments between two IDs, the last is taken
+       -f --force     : force adding entry to file, even if it exists already
+                        overrides previous occurances of -s or --safe
+       -s --safe      : safe usage, do not create duplicated entries (default)
+                        overrides previous occurances of -f or --force
+       <arXiv ID>     : the arXiv ID(s) to be looked up
+                        in case of a single ID, the order "-k <key> <ID>" is not enforced
+    """
 
     while len(argv) > 0:
         key = ""

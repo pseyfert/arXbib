@@ -156,7 +156,12 @@ def main(argv):
             # http://stackoverflow.com/questions/82831/check-whether-a-file-exists-using-python
             import os.path
             if os.path.isfile(bibfile):
-                biblio = open(bibfile, 'r').read()
+                # http://stackoverflow.com/questions/491921/unicode-utf8-reading-and-writing-to-files-in-python#844443
+                if sys.version < '3':
+                    import codecs
+                    biblio = codecs.open(bibfile, 'r', 'utf-8').read()
+                else:
+                    biblio = open(bibfile, 'r').read()
                 if key in biblio:
                     print(bcolors.FAIL+"bibtex key {} already in use! \nDid not patch bib file.".format(key) + bcolors.ENDC)
                     exit(4)  # exit after duplicate key has been found

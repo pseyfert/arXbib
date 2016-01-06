@@ -7,6 +7,8 @@ except ImportError:
 
 from arxbib import arXbib
 
+TESTID = "1507.03414"
+DEFAULTKEY = "Aaij:2015tga"
 PENTAQUARK = [
 u'',
 u'',
@@ -35,8 +37,9 @@ u'}',
 class SingleEntryTest(unittest.TestCase):
     def test_pentaquark(self):
         arxbib = arXbib()
-        lines = arxbib.process_single_entry("1507.03414")
+        lines = arxbib.process_single_entry(TESTID)
         self.assertEqual(lines,PENTAQUARK)
+        self.assertEqual(DEFAULTKEY,arxbib.id_key_pairs[TESTID])
 
 if __name__ == '__main__':
     unittest.main()

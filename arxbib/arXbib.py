@@ -18,6 +18,7 @@ HELPSTRING = """
                         overrides previous occurances of -s or --safe
        -s --safe      : safe usage, do not create duplicated entries (default)
                         overrides previous occurances of -f or --force
+       -i             : use the arXiv ID as citation key (can be overriden by -k for individual keys
        <arXiv ID>     : the arXiv ID(s) to be looked up
                         in case of a single ID, the order "-k <key> <ID>" is not enforced
     """
@@ -31,6 +32,7 @@ class arXbib(object):
         self.bibfile = ""
         self.id_key_pairs = {}
         self.force = False
+        self.use_id = False
 
     def parse(self,argv):
         while len(argv) > 0:
@@ -38,8 +40,8 @@ class arXbib(object):
             ID = ""
             try:
                 opts, argv = getopt.getopt(argv,
-                                           "o:k:fs",
-                                           ["open=", "key=", "force", "safe"])
+                                           "o:k:ifs",
+                                           ["open=", "key=", "use-arxiv-id", "force", "safe"])
             except getopt.GetoptError:
                 print(HELPSTRING)
                 exit(1)
@@ -60,6 +62,8 @@ class arXbib(object):
                     self.force = True
                 elif opt == '-s' or opt == "--safe":
                     self.force = False
+                elif opt == '-i' or opt == "--use-arxiv-id":
+                    self.use_id = True
             if ID != "":
                 self.id_key_pairs[ID] = key
             elif key != "":
@@ -135,6 +139,8 @@ class arXbib(object):
 
         if key != "":
             lines[keyline[0]] = lines[keyline[0]].replace(bibID, key)
+        elif self.use_id:
+            self.id_key_pairs[ID] = ID
         else:
             self.id_key_pairs[ID] = bibID
         

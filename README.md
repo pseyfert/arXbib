@@ -37,6 +37,7 @@ arXbib.py [-o <bibfile to patch>] [-k <new bibtex key>] [-f] <arXiv ID>
 * `-o <bibfile to patch>` a new entry will be appended to the bibfile. The script checks if the entry is already in the bibliography.
 * `-k <new bibtex key>` allows to change the bibtex key from the default one.
 * `-f` forces the entry to be written to the bibfile, even if duplicate entries are detected (the key has to be unique, though). 
+* `-i` use arxiv id instead of inspire citation key by default (can be overriden for individual entries by -k
 
 ## Installation
 Make a python3 environment by using [conda](http://conda.pydata.org/docs/install/quick.html#linux-miniconda-install):
